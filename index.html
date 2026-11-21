@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carol &amp; Giovanna — Convite de Casamento</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg-cream: #fbf7f2;
+      --bg-card: #fffdf9;
+      --bg-soft: #f3ece2;
+      --text-main: #c27039;
+      --text-muted: #75675c;
+      --accent-sage: #6f8272;
+      --accent-sage-dark: #58695b;
+      --accent-terracotta: #b8735b;
+      --accent-gold: #c4a373;
+      --border-soft: #e6dacb;
+      --shadow-soft: 0 18px 45px rgba(216, 96, 59, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      background: radial-gradient(circle at top, #fffdfa 0%, var(--bg-cream) 55%, #f2e8dc 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    #petals-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Container principal */
+    .wrapper {
+      position: relative;
+      z-index: 2;
+      max-width: 720px;
+      margin: 36px auto 56px;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: 28px;
+      padding: 48px 28px;
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+      position: relative;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border: 1px solid rgba(196, 163, 115, 0.35);
+      border-radius: 20px;
+      pointer-events: none;
+    }
+
+    .pre-title {
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent-sage-dark);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .names {
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(2.9rem, 8vw, 4.5rem);
+      color: var(--text-main);
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 22px;
+    }
+
+    .phrase {
+      font-family: "Cormorant Garamond", serif;
+      font-style: italic;
+      font-size: clamp(1.35rem, 3.6vw, 1.8rem);
+      color: var(--text-main);
+      max-width: 540px;
+      margin: 0 auto 28px;
+      line-height: 1.45;
+    }
+
+    .divider {
+      width: 90px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+      margin: 0 auto 28px;
+    }
+
+    .date-time-box {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 14px 28px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border-soft);
+      border-radius: 20px;
+      padding: 18px 26px;
+      margin-bottom: 26px;
+    }
+
+    .dt-item strong {
+      display: block;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.55rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .dt-item span {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+
+    .dt-sep {
+      width: 1px;
+      height: 36px;
+      background: var(--border-soft);
+    }
+
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      max-width: 460px;
+      margin: 0 auto 32px;
+    }
+
+    .cd-box {
+      background: #fff;
+      border: 1px solid var(--border-soft);
+      border-radius: 14px;
+      padding: 12px 8px;
+    }
+
+    .cd-num {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--accent-terracotta);
+      line-height: 1.1;
+    }
+
+    .cd-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* Botões principais */
+    .main-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 26px;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(58, 49, 43, 0.12);
+    }
+
+    .btn-location {
+      background: var(--accent-sage);
+      color: #fff;
+    }
+
+    .btn-location:hover {
+      background: var(--accent-sage-dark);
+    }
+
+    .btn-gifts {
+      background: var(--accent-terracotta);
+      color: #fff;
+    }
+
+    .btn-gifts:hover {
+      background: #a1614b;
+    }
+
+    /* Modais */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(38, 30, 25, 0.55);
+      backdrop-filter: blur(4px);
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: 24px;
+      max-width: 540px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 28px 24px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+      position: relative;
+      text-align: left;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .modal-title {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .close-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-soft);
+      color: var(--text-main);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+    }
+
+    .address-card {
+      background: var(--bg-soft);
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 18px;
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    .maps-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      text-decoration: none;
+      background: var(--accent-sage);
+      color: #fff;
+      font-weight: 600;
+      padding: 13px 18px;
+      border-radius: 14px;
+      transition: background 0.2s ease;
+    }
+
+    .maps-link:hover {
+      background: var(--accent-sage-dark);
+    }
+
+    /* Lista de presentes */
+    .gifts-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .gift-item {
+      border: 1.5px solid var(--border-soft);
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+      width: 100%;
+    }
+
+    .gift-item:hover {
+      border-color: var(--accent-terracotta);
+      background: #fffaf7;
+    }
+
+    .gift-item.selected {
+      border-color: var(--accent-terracotta);
+      background: #fdf3ee;
+      box-shadow: 0 6px 16px rgba(184, 115, 91, 0.14);
+    }
+
+    .gift-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-main);
+      display: block;
+    }
+
+    .gift-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .gift-price {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--accent-terracotta);
+      white-space: nowrap;
+    }
+
+    .pix-box {
+      background: var(--bg-soft);
+      border: 1px solid var(--border-soft);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .pix-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .pix-selected-note {
+      font-size: 0.85rem;
+      color: var(--accent-terracotta);
+      font-weight: 600;
+      margin-bottom: 10px;
+      min-height: 20px;
+    }
+
+    .pix-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .pix-input {
+      flex: 1;
+      min-width: 170px;
+      padding: 11px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
+      background: #fff;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .copy-btn {
+      padding: 11px 18px;
+      border-radius: 12px;
+      border: none;
+      background: var(--text-main);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: #221c18;
+    }
+
+    .copy-feedback {
+      margin-top: 10px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--accent-sage-dark);
+      min-height: 20px;
+    }
+
+    @media (max-width: 520px) {
+      .wrapper {
+        margin: 20px auto 44px;
+      }
+      .card {
+        padding: 34px 18px;
+      }
+      .dt-sep {
+        display: none;
+      }
+      .countdown {
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="petals-canvas"></canvas>
+
+  <main class="wrapper">
+    <section class="card">
+      <p class="pre-title">Celebração de Casamento</p>
+      <h1 class="names">Carol    &nbsp;&amp;&nbsp;    Giovanna</h1>
+
+      <p class="phrase">
+        "O amor nos uniu, e agora convidamos você para testemunhar o nosso 'Felizes para sempre'."
+      </p>
+
+      <div class="divider"></div>
+
+      <div class="date-time-box">
+        <div class="dt-item">
+          <span>Data</span>
+          <strong>24 de Janeiro</strong>
+        </div>
+        <div class="dt-sep"></div>
+        <div class="dt-item">
+          <span>Horário</span>
+          <strong>11 horas</strong>
+        </div>
+      </div>
+
+      <div id="countdown" class="countdown" aria-label="Contagem regressiva">
+        <div class="cd-box">
+          <div id="cd-days" class="cd-num">--</div>
+          <div class="cd-label">Dias</div>
+        </div>
+        <div class="cd-box">
+          <div id="cd-hours" class="cd-num">--</div>
+          <div class="cd-label">Horas</div>
+        </div>
+        <div class="cd-box">
+          <div id="cd-mins" class="cd-num">--</div>
+          <div class="cd-label">Min</div>
+        </div>
+        <div class="cd-box">
+          <div id="cd-secs" class="cd-num">--</div>
+          <div class="cd-label">Seg</div>
+        </div>
+      </div>
+
+      <div class="main-buttons">
+        <button id="open-location" class="btn btn-location" type="button">
+          📍 Localização
+        </button>
+        <button id="open-gifts" class="btn btn-gifts" type="button">
+          🎁 Lista de Presentes
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal Localização -->
+  <div id="location-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="loc-title">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="loc-title" class="modal-title">Localização</h2>
+        <button class="close-btn" data-close="location-modal" type="button" aria-label="Fechar">✕</button>
+      </div>
+
+      <div class="address-card">
+        <strong>Endereço:</strong><br />
+        R. Trasíbulo Pinheiro de Albuquerque, 1518 - Jardim Santa Helena, São Paulo - SP, 47870-001
+      </div>
+
+      <a
+        class="maps-link"
+        href="https://www.google.com/maps/search/?api=1&query=R.+Tras%C3%ADbulo+Pinheiro+de+Albuquerque,+1518+-+Jardim+Santa+Helena,+S%C3%A3o+Paulo+-+SP,+47870-001"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Abrir no Google Maps
+      </a>
+    </div>
+  </div>
+
+  <!-- Modal Lista de Presentes -->
+  <div id="gifts-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="gifts-title">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="gifts-title" class="modal-title">Lista de Presentes</h2>
+        <button class="close-btn" data-close="gifts-modal" type="button" aria-label="Fechar">✕</button>
+      </div>
+
+      <div class="gifts-grid" id="gifts-list">
+        <button type="button" class="gift-item" data-gift="Só para falar que não deu nada (R$ 75)">
+          <div>
+            <span class="gift-name">Só para falar que não deu nada</span>
+            <span class="gift-sub">Toque para selecionar</span>
+          </div>
+          <span class="gift-price">R$ 50</span>
+        </button>
+
+        <button type="button" class="gift-item" data-gift="Bebidas na frente da piscina (R$ 100)">
+          <div>
+            <span class="gift-name">Bebidas na frente da piscina</span>
+            <span class="gift-sub">Toque para selecionar</span>
+          </div>
+          <span class="gift-price">R$ 100</span>
+        </button>
+
+        <button type="button" class="gift-item" data-gift="Passeiai pôr do Sol (R$ 150)">
+          <div>
+            <span class="gift-name">Passeio pôr do Sol</span>
+            <span class="gift-sub">Toque para selecionar</span>
+          </div>
+          <span class="gift-price">R$ 150</span>
+        </button>
+
+        <button type="button" class="gift-item" data-gift="Viagem das noivas (R$ 200)">
+          <div>
+            <span class="gift-name">Viagem das noivas</span>
+            <span class="gift-sub">Toque para selecionar</span>
+          </div>
+          <span class="gift-price">R$ 200</span>
+        </button>
+      </div>
+
+      <div class="pix-box">
+        <div class="pix-label">Chave PIX (Telefone)</div>
+        <div id="pix-selected-note" class="pix-selected-note">Escolha um presente acima ou copie a chave PIX</div>
+        <div class="pix-row">
+          <input id="pix-key-input" class="pix-input" type="text" value="11964689413" readonly />
+          <button id="copy-pix-btn" class="copy-btn" type="button">Copiar PIX</button>
+        </div>
+        <div id="copy-feedback" class="copy-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Contagem regressiva para 24 de Janeiro às 11:00
+    function updateCountdown() {
+      const now = new Date();
+      let targetYear = now.getFullYear();
+      let targetDate = new Date(targetYear, 0, 24, 11, 0, 0);
+
+      if (now > targetDate) {
+        targetDate = new Date(targetYear + 1, 0, 24, 11, 0, 0);
+      }
+
+      const diff = Math.max(0, targetDate - now);
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const mins = Math.floor((diff / (1000 * 60)) % 60);
+      const secs = Math.floor((diff / 1000) % 60);
+
+      document.getElementById("cd-days").textContent = String(days).padStart(2, "0");
+      document.getElementById("cd-hours").textContent = String(hours).padStart(2, "0");
+      document.getElementById("cd-mins").textContent = String(mins).padStart(2, "0");
+      document.getElementById("cd-secs").textContent = String(secs).padStart(2, "0");
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // Pétalas flutuantes
+    const canvas = document.getElementById("petals-canvas");
+    const ctx = canvas.getContext("2d");
+    let petals = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    const petalColors = ["rgba(218, 168, 152, 0.55)", "rgba(235, 206, 192, 0.6)", "rgba(166, 184, 168, 0.45)"];
+
+    for (let i = 0; i < 24; i++) {
+      petals.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: 4 + Math.random() * 5,
+        speedY: 0.45 + Math.random() * 0.75,
+        speedX: -0.35 + Math.random() * 0.7,
+        angle: Math.random() * Math.PI * 2,
+        spin: (Math.random() - 0.5) * 0.03,
+        color: petalColors[i % petalColors.length]
+      });
+    }
+
+    function drawPetals() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const p of petals) {
+        p.y += p.speedY;
+        p.x += p.speedX + Math.sin(p.angle) * 0.3;
+        p.angle += p.spin;
+
+        if (p.y > canvas.height + 15) {
+          p.y = -15;
+          p.x = Math.random() * canvas.width;
+        }
+        if (p.x < -15) p.x = canvas.width + 15;
+        if (p.x > canvas.width + 15) p.x = -15;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, p.r * 1.3, p.r * 0.75, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      requestAnimationFrame(drawPetals);
+    }
+    drawPetals();
+
+    // Modais
+    const openModal = (id) => document.getElementById(id).classList.add("open");
+    const closeModal = (id) => document.getElementById(id).classList.remove("open");
+
+    document.getElementById("open-location").addEventListener("click", () => openModal("location-modal"));
+    document.getElementById("open-gifts").addEventListener("click", () => openModal("gifts-modal"));
+
+    document.querySelectorAll("[data-close]").forEach((btn) => {
+      btn.addEventListener("click", () => closeModal(btn.dataset.close));
+    });
+
+    document.querySelectorAll(".modal-backdrop").forEach((backdrop) => {
+      backdrop.addEventListener("click", (e) => {
+        if (e.target === backdrop) backdrop.classList.remove("open");
+      });
+    });
+
+    // Seleção de presente e copiar PIX
+    const giftButtons = document.querySelectorAll(".gift-item");
+    const pixNote = document.getElementById("pix-selected-note");
+    const pixInput = document.getElementById("pix-key-input");
+    const copyBtn = document.getElementById("copy-pix-btn");
+    const copyFeedback = document.getElementById("copy-feedback");
+
+    giftButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        giftButtons.forEach((b) => b.classList.remove("selected"));
+        btn.classList.add("selected");
+        pixNote.textContent = "Selecionado: " + btn.dataset.gift;
+        copyFeedback.textContent = "";
+      });
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      const value = pixInput.value;
+      let copied = false;
+
+      if (navigator.clipboard && window.isSecureContext) {
+        try {
+          await navigator.clipboard.writeText(value);
+          copied = true;
+        } catch (_) {
+          copied = false;
+        }
+      }
+
+      if (!copied) {
+        pixInput.focus();
+        pixInput.select();
+        pixInput.setSelectionRange(0, value.length);
+        try {
+          copied = document.execCommand("copy");
+        } catch (_) {
+          copied = false;
+        }
+      }
+
+      copyFeedback.textContent = copied
+        ? "Chave PIX 11964689413 copiada com sucesso!"
+        : "Chave PIX: 11964689413 — selecione e copie manualmente.";
+    });
+  </script>
+</body>
+</html>
