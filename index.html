@@ -251,6 +251,8 @@
       box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
       position: relative;
       text-align: left;
+      display: flex;
+      flex-direction: column;
     }
 
     .modal-header {
@@ -314,6 +316,7 @@
       grid-template-columns: 1fr;
       gap: 10px;
       margin-bottom: 20px;
+      width: 100%;
     }
 
     .gift-item {
@@ -363,6 +366,8 @@
     }
 
     .pix-box {
+      width: 100%;
+      flex-shrink: 0;
       background: var(--bg-soft);
       border: 1px solid var(--border-soft);
       border-radius: 18px;
@@ -452,7 +457,7 @@
   <main class="wrapper">
     <section class="card">
       <p class="pre-title">Celebração de Casamento</p>
-      <h1 class="names">Carol    &nbsp;&amp;&nbsp;    Giovanna</h1>
+      <h1 class="names">Carol &nbsp;&amp;&nbsp; Giovanna</h1>
 
       <p class="phrase">
         "O amor nos uniu, e agora convidamos você para testemunhar o nosso 'Felizes para sempre'."
@@ -551,7 +556,7 @@
           <span class="gift-price">R$ 100</span>
         </button>
 
-        <button type="button" class="gift-item" data-gift="Massagem Pós festa (R$ 150)">
+        <button type="button" class="gift-item" data-gift="Massagem pós festa (R$ 150)">
           <div>
             <span class="gift-name">Massagem pós festa</span>
             <span class="gift-sub">Toque para selecionar</span>
@@ -559,16 +564,15 @@
           <span class="gift-price">R$ 150</span>
         </button>
 
-        <button type="button" class="gift-item" data-gift="Ingresso para o Show do Luan Santa (R$ 200)">
+        <button type="button" class="gift-item" data-gift="Ingresso para o Show do Luan Santana (R$ 200)">
           <div>
             <span class="gift-name">Ingresso para o Show do Luan Santana</span>
             <span class="gift-sub">Toque para selecionar</span>
           </div>
           <span class="gift-price">R$ 200</span>
         </button>
-      </div>
 
-       <button type="button" class="gift-item" data-gift="Viagem das Noivas (R$ 300)">
+        <button type="button" class="gift-item" data-gift="Viagem das noivas (R$ 300)">
           <div>
             <span class="gift-name">Viagem das noivas</span>
             <span class="gift-sub">Toque para selecionar</span>
